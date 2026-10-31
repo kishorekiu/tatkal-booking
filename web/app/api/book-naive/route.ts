@@ -7,7 +7,7 @@ export async function POST(req: Request) {
 
   const { rows } = await pool.query(
     "SELECT seats_available FROM inventory WHERE train_id = $1",
-    [trainId]
+    [trainId],
   );
   const available = rows[0]?.seats_available ?? 0;
 
@@ -18,12 +18,12 @@ export async function POST(req: Request) {
   // The gap between the SELECT above and the UPDATE below is the race window.
   await pool.query(
     "UPDATE inventory SET seats_available = $1 WHERE train_id = $2",
-    [available - 1, trainId]
+    [available - 1, trainId],
   );
-  await pool.query(
-    "INSERT INTO bookings (train_id, user_id) VALUES ($1, $2)",
-    [trainId, userId]
-  );
+  await pool.query("INSERT INTO bookings (train_id, user_id) VALUES ($1, $2)", [
+    trainId,
+    userId,
+  ]);
 
   return Response.json({ ok: true });
 }

@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: tatkal
+      POSTGRES_PASSWORD: tatkal_dev
+      POSTGRES_DB: tatkal
+    ports:
+      - "5433:5432"   # HOST:CONTAINER — 5433 avoids clashing with any local Postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+
+volumes:
+  pgdata:
